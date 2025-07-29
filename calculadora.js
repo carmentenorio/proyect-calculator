@@ -60,6 +60,9 @@ for (let i = 0; i < botones.length; i++) {
 
     if (valor === "C") {
       pantalla.value = "";
+    } else if (valor === "DEL") {
+      pantalla.value = pantalla.value.slice(0, -1);
+      
     } else if (valor === "=") {
       const expresion = pantalla.value;
       const resultado = calcularExpresion(expresion);
@@ -83,9 +86,9 @@ function calcularExpresion(expr) {
     console.log(tokens[i]);
     if (tokens[i] === "*" || tokens[i] === "/") {
       console.log(tokens[i]);
-      let a = parseFloat(tokens[i - 1]); 
+      let a = parseFloat(tokens[i - 1]);
       console.log(a);
-      let b = parseFloat(tokens[i + 1]); 
+      let b = parseFloat(tokens[i + 1]);
       console.log(b);
       let res = tokens[i] === "*" ? a * b : a / b;
       tokens.splice(i - 1, 3, res); // Reemplaza a, operador, b por res
