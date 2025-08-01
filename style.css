@@ -1,4 +1,3 @@
-
 body {
   background-color: #f1f2f6;
   margin: 0;
@@ -6,7 +5,7 @@ body {
 }
 
 .container {
-  display: flex; 
+  display: flex;
   justify-content: center;
   align-items: flex-start;
   gap: 4px;
@@ -51,7 +50,6 @@ button {
   background-color: #57606f;
   color: white;
   cursor: pointer;
-  
 }
 
 button:hover {
@@ -65,17 +63,15 @@ button:active {
 ul {
   list-style-type: none;
 }
-
 #containerHistory {
-  display: none; 
- 
+  display: none;
 }
-#containerHistory{
-    background-color: #2f3542;
-    color: rgb(179, 170, 170);
-    padding: 10px;
-    border-radius: 10px;
-    max-height: 200px;
-    overflow: auto;
-    width: 150px;
+#containerHistory {
+  background-color: #2f3542;
+  color: rgb(179, 170, 170);
+  padding: 10px;
+  border-radius: 10px;
+  max-height: 200px;
+  overflow: auto;
+  width: 150px;
 }

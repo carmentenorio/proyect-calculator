@@ -16,6 +16,7 @@ btnHistory.addEventListener("click", () => {
   containerHistory.style.display = "block";
 });
 
+
 /** Hide history*/
 closeHistory.addEventListener("click", () => {
   containerHistory.style.display = "none";
@@ -48,7 +49,6 @@ buttons.forEach((button) => {
         operating2 = "";
         writingFirst = true;
         break;
-
       default:
         if (writingFirst) {
           operating1 += value;
@@ -118,12 +118,12 @@ function renderHistory() {
   }
 
   for (let i = 0; i < history.length; i++) {
+
     const li = document.createElement("li");
     li.textContent = history[i];
     list.appendChild(li);
   }
 }
-
 
 /**
  * Function that takes an expression as a string, tokenizes it (separates numbers and operators) and evaluates respecting the precedence of the operators.
