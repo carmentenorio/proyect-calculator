@@ -10,6 +10,46 @@ let escribiendoPrimero = true;
 let historial = [];
 let expresion = [];
 
+// Mostrar historial
+btnHistorial.addEventListener("click", () => {
+  renderizarHistorial();
+  contenedorHistorial.style.display = "block";
+});
+
+// Ocultar historial
+cerrarHistorial.addEventListener("click", () => {
+  contenedorHistorial.style.display = "none";
+});
+
+botones.forEach((boton) => {
+  boton.addEventListener("click", () => {
+    const valor = boton.textContent;
+
+    if (valor === "C") {
+      operando1 = operando2 = operador = "";
+      pantalla.value = "";
+      escribiendoPrimero = true;
+    } else if (["+", "-", "*", "/"].includes(valor)) {
+      operador = valor;
+      escribiendoPrimero = false;
+      pantalla.value += valor;
+    } else if (valor === "=") {
+      resultado = operar(operando1, operador, operando2);
+      pantalla.value = resultado;
+      operando1 = resultado;
+      operando2 = "";
+      escribiendoPrimero = true;
+    } else {
+      if (escribiendoPrimero) {
+        operando1 += valor;
+      } else {
+        operando2 += valor;
+      }
+      pantalla.value += valor;
+    }
+  });
+});
+
 // Función para realizar la operación
 function operar(a, operador, b) {
   a = parseFloat(a);
@@ -51,45 +91,18 @@ function operar(a, operador, b) {
   return resultado;
 }
 
-botones.forEach((boton) => {
-  boton.addEventListener("click", () => {
-    const valor = boton.textContent;
-
-    if (valor === "C") {
-      operando1 = operando2 = operador = "";
-      pantalla.value = "";
-      escribiendoPrimero = true;
-    } else if (["+", "-", "*", "/"].includes(valor)) {
-      operador = valor;
-      escribiendoPrimero = false;
-      pantalla.value += valor;
-    } else if (valor === "=") {
-      resultado = operar(operando1, operador, operando2);
-      pantalla.value = resultado;
-      operando1 = resultado;
-      operando2 = "";
-      escribiendoPrimero = true;
-    } else {
-      if (escribiendoPrimero) {
-        operando1 += valor;
-      } else {
-        operando2 += valor;
-      }
-      pantalla.value += valor;
-    }
-  });
-});
-
 function renderizarHistorial() {
   const lista = document.getElementById("historial");
-  lista.innerHTML = ""; // se limpia el historial antes de renderizar
-  // se recorre el historial y se crea un elemento li por cada operación
-  // se añade el texto de la operación al elemento li y se añade a la lista
+  // se limpia el historial antes de renderizar
+  lista.innerHTML = ""; 
+  // se recorre el historial y se crea un elemento li por cada operación  
+ // se añade el texto de la operación al elemento li y se añade a la lista
+ 
   if (historial.length === 0) {
     lista.innerHTML = "<li>No hay historial</li>";
     return;
   }
-  
+
   for (let i = 0; i < historial.length; i++) {
     // Crear un elemento de lista (li)
     const li = document.createElement("li");
@@ -99,10 +112,7 @@ function renderizarHistorial() {
   }
 }
 
-function renderizarOperacion() {
-  //const pantalla = document.getElementById("pantalla");
-  pantalla.value = expresion.join(" "); // mostramos en pantalla
-}
+
 
 //Función para calcular expresiones largas respetando precedencia del signo
 function calcularExpresion(expr) {
