@@ -1,11 +1,55 @@
 const pantalla = document.querySelector("#pantalla");
 const botones = document.querySelectorAll(".botones button");
 
-/*let operando1 = "";
+let operando1 = "";
 let operando2 = "";
 let operador = "";
 let resultado = "";
 let escribiendoPrimero = true;
+
+let historial = [];
+let expresion = [];
+
+// Función para realizar la operación
+function operar(a, operador, b) {
+  a = parseFloat(a);
+  b = parseFloat(b);
+
+  let resultado;
+  switch (operador) {
+    case "+":
+      resultado = a + b;
+      break;
+
+    case "-":
+      resultado = a - b;
+      break;
+
+    case "*":
+      resultado = a * b;
+      break;
+
+    case "/":
+      resultado = b !== 0 ? a / b : "Error";
+      break;
+  }
+
+  if (resultado !== "Error") {
+    historial.push(`${a} ${operador} ${b} = ${resultado}`);
+  } else {
+    historial.push(`${a} ${operador} ${b} = Error (división por 0)`);
+  }
+  // Renderizar el historial después de cada operación
+  console.log(historial);
+  console.log("Historial actualizado:", historial);
+  // Aquí se llama a la función para renderizar el historial
+  // Se actualiza el historial en la pantalla
+  // Se limpia la pantalla para mostrar el resultado
+  pantalla.value = resultado;
+  renderizarHistorial();
+
+  return resultado;
+}
 
 botones.forEach((boton) => {
   boton.addEventListener("click", () => {
@@ -36,41 +80,28 @@ botones.forEach((boton) => {
   });
 });
 
-
-function operar(a, operador, b) {
-  a = parseFloat(a);
-  b = parseFloat(b);
-  switch (operador) {
-    case "+":
-      return a + b;
-    case "-":
-      return a - b;
-    case "*":
-      return a * b;
-    case "/":
-      return b !== 0 ? a / b : "Error";
+function renderizarHistorial() {
+  const lista = document.getElementById("historial");
+  lista.innerHTML = ""; // se limpia el historial antes de renderizar
+  // se recorre el historial y se crea un elemento li por cada operación
+  // se añade el texto de la operación al elemento li y se añade a la lista
+  if (historial.length === 0) {
+    lista.innerHTML = "<li>No hay historial</li>";
+    return;
+  }
+  
+  for (let i = 0; i < historial.length; i++) {
+    // Crear un elemento de lista (li)
+    const li = document.createElement("li");
+    li.textContent = historial[i];
+    // Agregar los elementos 'li' a la lista 'ul'
+    lista.appendChild(li);
   }
 }
 
-*/
-
-for (let i = 0; i < botones.length; i++) {
-  botones[i].addEventListener("click", function () {
-    const valor = botones[i].textContent;
-
-    if (valor === "C") {
-      pantalla.value = "";
-    } else if (valor === "DEL") {
-      pantalla.value = pantalla.value.slice(0, -1);
-      
-    } else if (valor === "=") {
-      const expresion = pantalla.value;
-      const resultado = calcularExpresion(expresion);
-      pantalla.value = resultado;
-    } else {
-      pantalla.value += valor;
-    }
-  });
+function renderizarOperacion() {
+  //const pantalla = document.getElementById("pantalla");
+  pantalla.value = expresion.join(" "); // mostramos en pantalla
 }
 
 //Función para calcular expresiones largas respetando precedencia del signo
