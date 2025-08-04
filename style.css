@@ -64,9 +64,6 @@ ul {
   list-style-type: none;
 }
 #containerHistory {
-  display: none;
-}
-#containerHistory {
   background-color: #2f3542;
   color: rgb(179, 170, 170);
   padding: 10px;
@@ -75,3 +72,4 @@ ul {
   overflow: auto;
   width: 150px;
 }
+

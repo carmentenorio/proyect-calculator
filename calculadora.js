@@ -1,5 +1,5 @@
-const pantalla = document.querySelector("#screen");
-const botones = document.querySelectorAll(".buttons button");
+const screen = document.querySelector("#screen");
+const buttons = document.querySelectorAll(".buttons button");
 
 let operating1 = "";
 let operating2 = "";
@@ -118,7 +118,6 @@ function renderHistory() {
   }
 
   for (let i = 0; i < history.length; i++) {
-
     const li = document.createElement("li");
     li.textContent = history[i];
     list.appendChild(li);
