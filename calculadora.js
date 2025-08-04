@@ -1,128 +1,141 @@
-const pantalla = document.querySelector("#pantalla");
-const botones = document.querySelectorAll(".botones button");
+const pantalla = document.querySelector("#screen");
+const botones = document.querySelectorAll(".buttons button");
 
-let operando1 = "";
-let operando2 = "";
-let operador = "";
-let resultado = "";
-let escribiendoPrimero = true;
+let operating1 = "";
+let operating2 = "";
+let operator = "";
+let result = "";
+let writingFirst = true;
 
-let historial = [];
-let expresion = [];
+let history = [];
+let expression = [];
 
-// Mostrar historial
-btnHistorial.addEventListener("click", () => {
-  renderizarHistorial();
-  contenedorHistorial.style.display = "block";
+/**Show history*/
+btnHistory.addEventListener("click", () => {
+  renderHistory();
+  containerHistory.style.display = "block";
 });
 
-// Ocultar historial
-cerrarHistorial.addEventListener("click", () => {
-  contenedorHistorial.style.display = "none";
+/** Hide history*/
+closeHistory.addEventListener("click", () => {
+  containerHistory.style.display = "none";
 });
 
-botones.forEach((boton) => {
-  boton.addEventListener("click", () => {
-    const valor = boton.textContent;
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.textContent;
 
-    if (valor === "C") {
-      operando1 = operando2 = operador = "";
-      pantalla.value = "";
-      escribiendoPrimero = true;
-    } else if (["+", "-", "*", "/"].includes(valor)) {
-      operador = valor;
-      escribiendoPrimero = false;
-      pantalla.value += valor;
-    } else if (valor === "=") {
-      resultado = operar(operando1, operador, operando2);
-      pantalla.value = resultado;
-      operando1 = resultado;
-      operando2 = "";
-      escribiendoPrimero = true;
-    } else {
-      if (escribiendoPrimero) {
-        operando1 += valor;
-      } else {
-        operando2 += valor;
-      }
-      pantalla.value += valor;
+    switch (value) {
+      case "C":
+        operating1 = operating2 = operator = "";
+        screen.value = "";
+        writingFirst = true;
+        break;
+
+      case "+":
+      case "-":
+      case "*":
+      case "/":
+        operator = value;
+        writingFirst = false;
+        screen.value += value;
+        break;
+
+      case "=":
+        result = operate(operating1, operator, operating2);
+        screen.value = result;
+        operating1 = result;
+        operating2 = "";
+        writingFirst = true;
+        break;
+
+      default:
+        if (writingFirst) {
+          operating1 += value;
+        } else {
+          operating2 += value;
+        }
+        screen.value += value;
+        break;
     }
   });
 });
-
-// Función para realizar la operación
-function operar(a, operador, b) {
+/**
+ * Function to perform the operation between two numbers and an operator, , and updates the history.
+ * @param  a 
+ * @param  operator 
+ * @param  b 
+ * @return {number|string} 
+ */
+function operate(a, operator, b) {
   a = parseFloat(a);
   b = parseFloat(b);
 
-  let resultado;
-  switch (operador) {
+  let result;
+  switch (operator) {
     case "+":
-      resultado = a + b;
+      result = a + b;
       break;
 
     case "-":
-      resultado = a - b;
+      result = a - b;
       break;
 
     case "*":
-      resultado = a * b;
+      result = a * b;
       break;
 
     case "/":
-      resultado = b !== 0 ? a / b : "Error";
+      result = b !== 0 ? a / b : "Error";
       break;
   }
 
-  if (resultado !== "Error") {
-    historial.push(`${a} ${operador} ${b} = ${resultado}`);
+  if (result !== "Error") {
+    history.push(`${a} ${operator} ${b} = ${result}`);
   } else {
-    historial.push(`${a} ${operador} ${b} = Error (división por 0)`);
+    history.push(`${a} ${operator} ${b} = Error (division by 0)`);
   }
-  // Renderizar el historial después de cada operación
-  console.log(historial);
-  console.log("Historial actualizado:", historial);
-  // Aquí se llama a la función para renderizar el historial
-  // Se actualiza el historial en la pantalla
-  // Se limpia la pantalla para mostrar el resultado
-  pantalla.value = resultado;
-  renderizarHistorial();
-
-  return resultado;
+  console.log(history);
+  console.log("Updated history:", history);
+  screen.value = result;
+  renderHistory();
+  return result;
 }
 
-function renderizarHistorial() {
-  const lista = document.getElementById("historial");
-  // se limpia el historial antes de renderizar
-  lista.innerHTML = ""; 
-  // se recorre el historial y se crea un elemento li por cada operación  
- // se añade el texto de la operación al elemento li y se añade a la lista
- 
-  if (historial.length === 0) {
-    lista.innerHTML = "<li>No hay historial</li>";
+/** 
+* Function to render the operation history
+* An li element is created for each operation and added to the list ul
+* @param {void}
+* @return {void}
+*/
+function renderHistory() {
+  const list = document.getElementById("history");
+  list.innerHTML = "";
+
+  if (history.length === 0) {
+    list.innerHTML = "<li>There is no history</li>";
     return;
   }
 
-  for (let i = 0; i < historial.length; i++) {
-    // Crear un elemento de lista (li)
+  for (let i = 0; i < history.length; i++) {
     const li = document.createElement("li");
-    li.textContent = historial[i];
-    // Agregar los elementos 'li' a la lista 'ul'
-    lista.appendChild(li);
+    li.textContent = history[i];
+    list.appendChild(li);
   }
 }
 
 
-
-//Función para calcular expresiones largas respetando precedencia del signo
-function calcularExpresion(expr) {
-  // toquenizar la expresion, separar números y operadores
+/**
+ * Function that takes an expression as a string, tokenizes it (separates numbers and operators) and evaluates respecting the precedence of the operators.
+ * @param expr 
+ * @returns 
+ */
+function calculateExpression(expr) {
   let tokens = expr.match(/\d+(\.\d+)?|[+\-*/]/g);
   console.log(tokens);
 
   if (!tokens) return "Error";
 
-  // Resolver * y /
   for (let i = 0; i < tokens.length; i++) {
     console.log(tokens[i]);
     if (tokens[i] === "*" || tokens[i] === "/") {
@@ -132,12 +145,11 @@ function calcularExpresion(expr) {
       let b = parseFloat(tokens[i + 1]);
       console.log(b);
       let res = tokens[i] === "*" ? a * b : a / b;
-      tokens.splice(i - 1, 3, res); // Reemplaza a, operador, b por res
-      i--; // Retrocede para seguir evaluando
+      tokens.splice(i - 1, 3, res); 
+      i--; 
     }
   }
 
-  // Resolver + y -
   for (let i = 0; i < tokens.length; i++) {
     if (tokens[i] === "+" || tokens[i] === "-") {
       let a = parseFloat(tokens[i - 1]);
@@ -148,5 +160,5 @@ function calcularExpresion(expr) {
     }
   }
 
-  return tokens[0]; // El único elemento restante es el resultado
+  return tokens[0]; 
 }
