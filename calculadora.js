@@ -90,8 +90,8 @@ function operate(a, operator, b) {
   } else {
     history.push(`${a} ${operator} ${b} = Error (division by 0)`);
   }
-  const history1 = history;
-  localStorage.setItem("history", JSON.stringify(history1));
+  const history = localStorageHistory;
+  localStorage.setItem("history", JSON.stringify(history));
   screen.value = result;
   renderHistory();
   return result;
