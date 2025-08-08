@@ -1,5 +1,5 @@
-const pantalla = document.querySelector("#screen");
-const botones = document.querySelectorAll(".buttons button");
+const screen = document.querySelector("#screen");
+const buttons = document.querySelectorAll(".buttons button");
 
 let operating1 = "";
 let operating2 = "";
@@ -10,28 +10,29 @@ let writingFirst = true;
 let history = [];
 let expression = [];
 
-/**Show history*/
 btnHistory.addEventListener("click", () => {
   renderHistory();
+  localStorage.setItem("displayHistory", 1);
   containerHistory.style.display = "block";
 });
+btndltHistory.addEventListener("click", () => {
+  clearHistory();
+});
 
-/** Hide history*/
 closeHistory.addEventListener("click", () => {
+  localStorage.setItem("displayHistory", 0);
   containerHistory.style.display = "none";
 });
 
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
     const value = button.textContent;
-
     switch (value) {
       case "C":
         operating1 = operating2 = operator = "";
         screen.value = "";
         writingFirst = true;
         break;
-
       case "+":
       case "-":
       case "*":
@@ -40,7 +41,6 @@ buttons.forEach((button) => {
         writingFirst = false;
         screen.value += value;
         break;
-
       case "=":
         result = operate(operating1, operator, operating2);
         screen.value = result;
@@ -48,7 +48,6 @@ buttons.forEach((button) => {
         operating2 = "";
         writingFirst = true;
         break;
-
       default:
         if (writingFirst) {
           operating1 += value;
@@ -62,29 +61,25 @@ buttons.forEach((button) => {
 });
 /**
  * Function to perform the operation between two numbers and an operator, , and updates the history.
- * @param  a 
- * @param  operator 
- * @param  b 
- * @return {number|string} 
+ * @param  a
+ * @param  operator
+ * @param  b
+ * @return {number|string}
  */
 function operate(a, operator, b) {
   a = parseFloat(a);
   b = parseFloat(b);
-
   let result;
   switch (operator) {
     case "+":
       result = a + b;
       break;
-
     case "-":
       result = a - b;
       break;
-
     case "*":
       result = a * b;
       break;
-
     case "/":
       result = b !== 0 ? a / b : "Error";
       break;
@@ -95,47 +90,46 @@ function operate(a, operator, b) {
   } else {
     history.push(`${a} ${operator} ${b} = Error (division by 0)`);
   }
-  console.log(history);
-  console.log("Updated history:", history);
+  const history = localStorageHistory;
+  localStorage.setItem("history", JSON.stringify(history));
   screen.value = result;
   renderHistory();
   return result;
 }
-
-/** 
-* Function to render the operation history
-* An li element is created for each operation and added to the list ul
-* @param {void}
-* @return {void}
-*/
+/**
+ * Function to render the operation history
+ * An li element is created for each operation and added to the list ul
+ * @param {void}
+ * @return {void}
+ */
 function renderHistory() {
   const list = document.getElementById("history");
   list.innerHTML = "";
-
-  if (history.length === 0) {
+  const storedHistory = JSON.parse(localStorage.getItem("history"));
+  if (storedHistory === null || storedHistory.length === 0) {
     list.innerHTML = "<li>There is no history</li>";
     return;
   }
-
-  for (let i = 0; i < history.length; i++) {
+  for (let i = 0; i < storedHistory.length; i++) {
     const li = document.createElement("li");
-    li.textContent = history[i];
+    li.textContent = storedHistory[i];
     list.appendChild(li);
   }
 }
 
-
+function clearHistory() {
+  history = [];
+  localStorage.removeItem("history");
+  renderHistory();
+}
 /**
  * Function that takes an expression as a string, tokenizes it (separates numbers and operators) and evaluates respecting the precedence of the operators.
- * @param expr 
- * @returns 
+ * @param expr
+ * @returns
  */
 function calculateExpression(expr) {
   let tokens = expr.match(/\d+(\.\d+)?|[+\-*/]/g);
-  console.log(tokens);
-
   if (!tokens) return "Error";
-
   for (let i = 0; i < tokens.length; i++) {
     console.log(tokens[i]);
     if (tokens[i] === "*" || tokens[i] === "/") {
@@ -145,8 +139,8 @@ function calculateExpression(expr) {
       let b = parseFloat(tokens[i + 1]);
       console.log(b);
       let res = tokens[i] === "*" ? a * b : a / b;
-      tokens.splice(i - 1, 3, res); 
-      i--; 
+      tokens.splice(i - 1, 3, res);
+      i--;
     }
   }
 
@@ -159,6 +153,14 @@ function calculateExpression(expr) {
       i--;
     }
   }
-
-  return tokens[0]; 
+  return tokens[0];
 }
+function init() {
+  displayHistory = localStorage.getItem("displayHistory") ?? 0;
+  if (displayHistory === "1") {
+    renderHistory();
+    containerHistory.style.display = displayHistory === "1" ? "block" : "none";
+  }
+}
+
+init();
