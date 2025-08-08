@@ -39,7 +39,7 @@ body {
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 3px;
+  gap: 5px;
 }
 
 button {
@@ -71,5 +71,15 @@ ul {
   max-height: 200px;
   overflow: auto;
   width: 150px;
+}
+
+#btnHistory, #btndltHistory, #closeHistory {
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1em;
+  margin-top: 15px;
+  margin-right: 8px;
 }
 

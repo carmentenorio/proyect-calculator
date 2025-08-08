@@ -13,13 +13,19 @@ let expression = [];
 /**Show history*/
 btnHistory.addEventListener("click", () => {
   renderHistory();
+  localStorage.setItem("displayHistory", 1);
   containerHistory.style.display = "block";
+});
+/**Delete history*/
+btndltHistory.addEventListener("click", () => {
+  clearHistory();
 });
 
 
 /** Hide history*/
 closeHistory.addEventListener("click", () => {
-  containerHistory.style.display = "none";
+  localStorage.setItem("displayHistory", 0);
+  containerHistory.style.display = "none";  
 });
 
 buttons.forEach((button) => {
@@ -62,10 +68,10 @@ buttons.forEach((button) => {
 });
 /**
  * Function to perform the operation between two numbers and an operator, , and updates the history.
- * @param  a 
- * @param  operator 
- * @param  b 
- * @return {number|string} 
+ * @param  a
+ * @param  operator
+ * @param  b
+ * @return {number|string}
  */
 function operate(a, operator, b) {
   a = parseFloat(a);
@@ -95,39 +101,56 @@ function operate(a, operator, b) {
   } else {
     history.push(`${a} ${operator} ${b} = Error (division by 0)`);
   }
-  console.log(history);
+  console.log("history: " + history);
+
+  const history1 = history;
+  localStorage.setItem("history", JSON.stringify(history1));
+
   console.log("Updated history:", history);
   screen.value = result;
   renderHistory();
   return result;
 }
 
-/** 
-* Function to render the operation history
-* An li element is created for each operation and added to the list ul
-* @param {void}
-* @return {void}
-*/
+/**
+ * Function to render the operation history
+ * An li element is created for each operation and added to the list ul
+ * @param {void}
+ * @return {void}
+ */
 function renderHistory() {
   const list = document.getElementById("history");
   list.innerHTML = "";
 
-  if (history.length === 0) {
+  /*if (history.length === 0) {
+    list.innerHTML = "<li>There is no history</li>";
+    return;
+  }*/
+  const storedHistory = JSON.parse(localStorage.getItem("history"));
+  //console.log("Stored history:", storedHistory);
+
+  //history = storedHistory ? JSON.parse(storedHistory) : [];
+
+  if (storedHistory === null || storedHistory.length === 0) {
     list.innerHTML = "<li>There is no history</li>";
     return;
   }
-
-  for (let i = 0; i < history.length; i++) {
+  for (let i = 0; i < storedHistory.length; i++) {
     const li = document.createElement("li");
-    li.textContent = history[i];
+    li.textContent = storedHistory[i];
     list.appendChild(li);
   }
 }
 
+function clearHistory() {
+  history = [];
+  localStorage.removeItem("history");
+  renderHistory();
+}
 /**
  * Function that takes an expression as a string, tokenizes it (separates numbers and operators) and evaluates respecting the precedence of the operators.
- * @param expr 
- * @returns 
+ * @param expr
+ * @returns
  */
 function calculateExpression(expr) {
   let tokens = expr.match(/\d+(\.\d+)?|[+\-*/]/g);
@@ -144,8 +167,8 @@ function calculateExpression(expr) {
       let b = parseFloat(tokens[i + 1]);
       console.log(b);
       let res = tokens[i] === "*" ? a * b : a / b;
-      tokens.splice(i - 1, 3, res); 
-      i--; 
+      tokens.splice(i - 1, 3, res);
+      i--;
     }
   }
 
@@ -159,5 +182,16 @@ function calculateExpression(expr) {
     }
   }
 
-  return tokens[0]; 
+  return tokens[0];
 }
+
+
+function init(){
+  displayHistory = localStorage.getItem("displayHistory") ?? 0;
+  if (displayHistory === '1') {
+    renderHistory();
+    containerHistory.style.display = displayHistory === '1' ? "block":"none";
+  }
+};
+
+init();
