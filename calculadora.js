@@ -10,35 +10,29 @@ let writingFirst = true;
 let history = [];
 let expression = [];
 
-/**Show history*/
 btnHistory.addEventListener("click", () => {
   renderHistory();
   localStorage.setItem("displayHistory", 1);
   containerHistory.style.display = "block";
 });
-/**Delete history*/
 btndltHistory.addEventListener("click", () => {
   clearHistory();
 });
 
-
-/** Hide history*/
 closeHistory.addEventListener("click", () => {
   localStorage.setItem("displayHistory", 0);
-  containerHistory.style.display = "none";  
+  containerHistory.style.display = "none";
 });
 
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
     const value = button.textContent;
-
     switch (value) {
       case "C":
         operating1 = operating2 = operator = "";
         screen.value = "";
         writingFirst = true;
         break;
-
       case "+":
       case "-":
       case "*":
@@ -47,7 +41,6 @@ buttons.forEach((button) => {
         writingFirst = false;
         screen.value += value;
         break;
-
       case "=":
         result = operate(operating1, operator, operating2);
         screen.value = result;
@@ -76,21 +69,17 @@ buttons.forEach((button) => {
 function operate(a, operator, b) {
   a = parseFloat(a);
   b = parseFloat(b);
-
   let result;
   switch (operator) {
     case "+":
       result = a + b;
       break;
-
     case "-":
       result = a - b;
       break;
-
     case "*":
       result = a * b;
       break;
-
     case "/":
       result = b !== 0 ? a / b : "Error";
       break;
@@ -101,17 +90,12 @@ function operate(a, operator, b) {
   } else {
     history.push(`${a} ${operator} ${b} = Error (division by 0)`);
   }
-  console.log("history: " + history);
-
   const history1 = history;
   localStorage.setItem("history", JSON.stringify(history1));
-
-  console.log("Updated history:", history);
   screen.value = result;
   renderHistory();
   return result;
 }
-
 /**
  * Function to render the operation history
  * An li element is created for each operation and added to the list ul
@@ -121,16 +105,7 @@ function operate(a, operator, b) {
 function renderHistory() {
   const list = document.getElementById("history");
   list.innerHTML = "";
-
-  /*if (history.length === 0) {
-    list.innerHTML = "<li>There is no history</li>";
-    return;
-  }*/
   const storedHistory = JSON.parse(localStorage.getItem("history"));
-  //console.log("Stored history:", storedHistory);
-
-  //history = storedHistory ? JSON.parse(storedHistory) : [];
-
   if (storedHistory === null || storedHistory.length === 0) {
     list.innerHTML = "<li>There is no history</li>";
     return;
@@ -154,10 +129,7 @@ function clearHistory() {
  */
 function calculateExpression(expr) {
   let tokens = expr.match(/\d+(\.\d+)?|[+\-*/]/g);
-  console.log(tokens);
-
   if (!tokens) return "Error";
-
   for (let i = 0; i < tokens.length; i++) {
     console.log(tokens[i]);
     if (tokens[i] === "*" || tokens[i] === "/") {
@@ -181,17 +153,14 @@ function calculateExpression(expr) {
       i--;
     }
   }
-
   return tokens[0];
 }
-
-
-function init(){
+function init() {
   displayHistory = localStorage.getItem("displayHistory") ?? 0;
-  if (displayHistory === '1') {
+  if (displayHistory === "1") {
     renderHistory();
-    containerHistory.style.display = displayHistory === '1' ? "block":"none";
+    containerHistory.style.display = displayHistory === "1" ? "block" : "none";
   }
-};
+}
 
 init();
